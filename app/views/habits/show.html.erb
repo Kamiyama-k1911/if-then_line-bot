@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Trigger:</strong>
+  <%= @habit.trigger %>
+</p>
+
+<p>
+  <strong>Action:</strong>
+  <%= @habit.action %>
+</p>
+
+<p>
+  <strong>Count:</strong>
+  <%= @habit.count %>
+</p>
+
+<%= link_to 'Edit', edit_habit_path(@habit) %> |
+<%= link_to 'Back', habits_path %>
