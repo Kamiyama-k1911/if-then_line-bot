@@ -19,7 +19,36 @@ class LineBotController < ApplicationController
     events.each do |event|
       # LINE からテキストが送信された場合
       if (event.type === Line::Bot::Event::MessageType::Text)
+        message = event["message"]["text"]
+
+        case message
+        when "一覧" then
+          habit_list = "trigger\n"
+
+          Habit.all.each.with_index(1) do |habit, index|
+            list = "#{index}: #{habit.trigger}\n"
+            habit_list += list
+         end
+          reply_message = {
+            type: "text",
+            text: habit_list
+          }
+          client.reply_message(event["replyToken"], reply_message)
+        else
+          Habit.create(trigger: message)
+
+          reply_message = {
+            type: "text",
+            text: "trigger: #{message}を追加しました！"
+          }
+
+          client.reply_message(event["replyToken"], reply_message)
+        end
+
+        #メッセージをDBに登録
+
         # LINE からテキストが送信されたときの処理を記述する
+
       end
     end
 
