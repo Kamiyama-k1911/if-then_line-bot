@@ -21,55 +21,32 @@ class LineBotController < ApplicationController
       if (event.type === Line::Bot::Event::MessageType::Text)
         message = event["message"]["text"]
 
-        if message == "一覧"
-          habit_list = "trigger一覧\n"
+        text =
+          case message
+          when "一覧"
+            habits = Habit.all
 
-          # Habit.all.each.with_index(1) do |habit, index|
-          #   list = "#{index}: #{habit.trigger}\n"
-          #   habit_list += list
-          # end
+            habits.each.map {|habit| "#{habit.id}: #{habit.trigger}" }.join("\n")
 
-          Habit.all.each.with_index(1) do |habit, index|
-            list = "#{habit.id}: #{habit.trigger}\n"
-            habit_list += list
+          when /削除+\d/
+            num = message.gsub(/削除/, '').to_i
+
+            habit = Habit.find(num)
+            habit.destroy
+
+            "trigger #{num}: #{habit.trigger}を削除しました！"
+          else
+            habit = Habit.create(trigger: message)
+
+            "trigger: #{habit.trigger}を追加しました！"
           end
 
-         # LINE からテキストが送信されたときの処理を記述する
-          reply_message = {
-            type: "text",
-            text: habit_list
-          }
-          client.reply_message(event["replyToken"], reply_message)
-        elsif message.to_i != 0
-          habit = Habit.find(message.to_i)
-
-          habit.destroy
-
-          reply_message = {
-            type: "text",
-            text: "番号#{habit.id}: #{habit.trigger}を削除しました！"
-          }
-
-          client.reply_message(event["replyToken"], reply_message )
-          # message = {
-          #   type: "text",
-          #   text: "消したいtriggerの番号を指定してください！"
-          # }
-
-          # response = client.push_message(event['source']['userId'], message)
-          # LINE からテキストが送信されたときの処理を記述する
-        else
-          #メッセージをDBに登録
-          Habit.create(trigger: message)
-
           # LINE からテキストが送信されたときの処理を記述する
           reply_message = {
             type: "text",
-            text: "trigger: #{message}を追加しました！"
+            text: text
           }
-
           client.reply_message(event["replyToken"], reply_message)
-        end
 
       end
     end
