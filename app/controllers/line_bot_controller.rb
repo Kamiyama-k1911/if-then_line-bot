@@ -23,13 +23,12 @@ class LineBotController < ApplicationController
         user = User.find_by(userid: userid) || User.create(userid: userid)
 
         message = event["message"]["text"]
-        habit = nil
         text =
           case message
           when "一覧"
             habits = user.habits
 
-            habits.each.map.with_index(1) {|habit,index| "#{index}: #{habit.trigger} 合計: #{habit.count}回" }.join("\n")
+            habits.each.map.with_index(1) {|habit,index| "習慣#{index} \nきっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action} \n\n合計: #{habit.count}回 \n" }.join("\n")
 
           when /削除+\d/
             num = message.gsub(/削除/, '').to_i
@@ -39,28 +38,21 @@ class LineBotController < ApplicationController
             habit = habits[num-1]
             habit.destroy
 
-            "trigger #{num}: #{habit.trigger}を削除しました！"
+            "習慣 #{num}\n きっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action}\n\nを削除しました！"
           when "追加"
-            "triggerを入力してください！"
-            # if habit == nil
-              # trigger_message = {
-              #   type: 'text',
-              #   text: "triggerを入力してください"
-              # }
-              # client.push_message(userid, trigger_message)
-            # end
+            "きっかけを入力してください！"
           else
-            if habit.trigger == nil && habit.action == nil
-            habit = user.habits.create(trigger: trigger_message)
+            if Temp.all.length == 0
+              temp_trigger = Temp.create(temp_trigger: message)
 
-              action_message = {
-              type: 'text',
-              text: "actionを入力してください"
-            }
-            client.push_message(userid, action_message)
+              "行動を入力してください"
+            elsif Temp.all.length == 1
+              temp = Temp.first
+              habit = user.habits.create(trigger: temp.temp_trigger, action: message)
 
-              # "trigger: #{habit.trigger}を追加しました！"
-            # end
+              temp.destroy
+
+              "新しい習慣\n\nきっかけ:\n #{habit.trigger}  \n行動:\n  #{habit.action}\n\nを追加しました！"
             end
           end
 
