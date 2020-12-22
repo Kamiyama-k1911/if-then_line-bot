@@ -28,8 +28,11 @@ class LineBotController < ApplicationController
           when "一覧"
             habits = user.habits
 
-            habits.each.map.with_index(1) {|habit,index| "習慣#{index} \nきっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action} \n\n行動した回数: #{habit.count}回 \n" }.join("\n")
-
+            if habits.length == 0
+              "まだ習慣は存在していません！"
+            else
+              habits.each.map.with_index(1) {|habit,index| "習慣#{index} \nきっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action} \n\n行動した回数: #{habit.count}回 \n" }.join("\n")
+            end
           when /\d+削除/
             num = message.gsub(/削除/, '').to_i
 
