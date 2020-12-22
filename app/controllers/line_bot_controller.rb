@@ -40,11 +40,9 @@ class LineBotController < ApplicationController
 
             "習慣 #{num}\n きっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action}\n\nを削除しました！"
           when /\d+回数+\d/
-            binding.pry
             habit_num = message.gsub(/回数+\d/, "").to_i
             count_num = message.gsub(/\d+回数/, "").to_i
 
-            binding.pry
             habits = user.habits
 
             habit = habits[habit_num-1]
