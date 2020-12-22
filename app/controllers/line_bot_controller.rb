@@ -26,12 +26,14 @@ class LineBotController < ApplicationController
           when "一覧"
             habits = Habit.all
 
-            habits.each.map {|habit| "#{habit.id}: #{habit.trigger}" }.join("\n")
+            habits.each.map.with_index(1) {|habit,index| "#{index}: #{habit.trigger} 合計: #{habit.count}回" }.join("\n")
 
           when /削除+\d/
             num = message.gsub(/削除/, '').to_i
 
-            habit = Habit.find(num)
+            habits = Habit.all
+
+            habit = habits[num-1]
             habit.destroy
 
             "trigger #{num}: #{habit.trigger}を削除しました！"
