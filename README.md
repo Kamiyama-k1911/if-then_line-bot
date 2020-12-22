@@ -1,24 +1,32 @@
-# README
+### if-then botとは
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+if-then botは悪い習慣を断ち切る事を助けます。
 
-Things you may want to cover:
+例えば携帯を触ってしまい、やるべきことができないとしたら、
+```
+もし 携帯を触ってしまいそうになったら(きっかけ)
+その時は 水を飲みにいく(行動)
+```
+のように携帯を触ることを何か別の行動に置き換えます。
+これを繰り返す事によって段々と代替行動が習慣になっていき結果的に悪い習慣を断ち切ることにつながります。
 
-* Ruby version
+### if-then botの機能一覧
 
-* System dependencies
+1. 登録した習慣を一覧表示
+2. 習慣の追加
+3. 習慣の削除
+4. 習慣を行った回数を追加
 
-* Configuration
+### 詳しい使い方
 
-* Database creation
+1. 登録した習慣を一覧表示
+→「一覧」と入力すると登録した習慣の一覧を見ることが出来ます。
+2. 習慣の追加
+→「追加」と入力すると習慣を登録することが出来ます！
+3. 習慣の削除
+→「一覧で表示される習慣番号(半角)削除」と入力頂きますと習慣を削除することが出来ます。
+   - 例）3番の習慣を削除した場合は、「3削除」とご入力します。
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+4. 習慣を行った回数を追加
+ →「一覧で表示される習慣番号(半角)回数追加したい回数(半角」と入力するとと、習慣を行った回数を追加することが出来ます。
+    - 例）3番の習慣を5回行った場合は、「3回数5」と入力します。
