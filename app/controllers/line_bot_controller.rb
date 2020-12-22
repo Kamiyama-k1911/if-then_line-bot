@@ -28,7 +28,7 @@ class LineBotController < ApplicationController
           when "一覧"
             habits = user.habits
 
-            habits.each.map.with_index(1) {|habit,index| "習慣#{index} \nきっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action} \n\n合計: #{habit.count}回 \n" }.join("\n")
+            habits.each.map.with_index(1) {|habit,index| "習慣#{index} \nきっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action} \n\n行動した回数: #{habit.count}回 \n" }.join("\n")
 
           when /削除+\d/
             num = message.gsub(/削除/, '').to_i
@@ -39,6 +39,19 @@ class LineBotController < ApplicationController
             habit.destroy
 
             "習慣 #{num}\n きっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action}\n\nを削除しました！"
+          when /\d+回数+\d/
+            binding.pry
+            habit_num = message.gsub(/回数+\d/, "").to_i
+            count_num = message.gsub(/\d+回数/, "").to_i
+
+            binding.pry
+            habits = user.habits
+
+            habit = habits[habit_num-1]
+            habit.count += count_num
+            habit.update(count: habit.count)
+
+            "習慣 #{habit_num}\n きっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action}\n\nを#{count_num}回行いました！合計で行った回数は#{habit.count}回です。"
           when "追加"
             "きっかけを入力してください！"
           else
