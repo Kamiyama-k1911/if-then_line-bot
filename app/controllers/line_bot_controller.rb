@@ -30,7 +30,7 @@ class LineBotController < ApplicationController
 
             habits.each.map.with_index(1) {|habit,index| "習慣#{index} \nきっかけ:\n  #{habit.trigger} \n行動:\n  #{habit.action} \n\n行動した回数: #{habit.count}回 \n" }.join("\n")
 
-          when /削除+\d/
+          when /\d+削除/
             num = message.gsub(/削除/, '').to_i
 
             habits = user.habits
@@ -62,12 +62,11 @@ class LineBotController < ApplicationController
             "2.習慣の追加\n" +
             "「追加」と入力頂きますと習慣を登録することが出来ます！\n\n" +
             "3.習慣の削除\n" +
-            "「削除+一覧で表示される習慣番号(半角)」と入力頂きますと習慣を削除することが出来ます\n\n" +
-            "例）3番の習慣を削除した場合は、「削除3」とご入力ください！\n\n" +
+            "「一覧で表示される習慣番号(半角)+削除」と入力頂きますと習慣を削除することが出来ます\n\n" +
+            "例）3番の習慣を削除した場合は、「3削除」とご入力ください！\n\n" +
             "4.習慣を行った回数を追加\n" +
             "「一覧で表示される習慣番号(半角)+回数+追加したい回数(半角」と入力頂きますと、習慣を行った回数を追加することが出来ます\n\n" +
             "例）3番の習慣を5回行った場合は、「3回数5」とご入力ください！"
-
           else
             if Temp.all.length == 0
               temp_trigger = Temp.create(temp_trigger: message)
