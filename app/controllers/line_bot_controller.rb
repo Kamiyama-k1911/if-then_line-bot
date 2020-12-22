@@ -19,28 +19,49 @@ class LineBotController < ApplicationController
     events.each do |event|
       # LINE からテキストが送信された場合
       if (event.type === Line::Bot::Event::MessageType::Text)
-        message = event["message"]["text"]
+        userid = event["source"]["userId"]
+        user = User.find_by(userid: userid) || User.create(userid: userid)
 
+        message = event["message"]["text"]
+        habit = nil
         text =
           case message
           when "一覧"
-            habits = Habit.all
+            habits = user.habits
 
             habits.each.map.with_index(1) {|habit,index| "#{index}: #{habit.trigger} 合計: #{habit.count}回" }.join("\n")
 
           when /削除+\d/
             num = message.gsub(/削除/, '').to_i
 
-            habits = Habit.all
+            habits = user.habits
 
             habit = habits[num-1]
             habit.destroy
 
             "trigger #{num}: #{habit.trigger}を削除しました！"
+          when "追加"
+            "triggerを入力してください！"
+            # if habit == nil
+              # trigger_message = {
+              #   type: 'text',
+              #   text: "triggerを入力してください"
+              # }
+              # client.push_message(userid, trigger_message)
+            # end
           else
-            habit = Habit.create(trigger: message)
+            if habit.trigger == nil && habit.action == nil
+            habit = user.habits.create(trigger: trigger_message)
 
-            "trigger: #{habit.trigger}を追加しました！"
+              action_message = {
+              type: 'text',
+              text: "actionを入力してください"
+            }
+            client.push_message(userid, action_message)
+
+              # "trigger: #{habit.trigger}を追加しました！"
+            # end
+            end
           end
 
           # LINE からテキストが送信されたときの処理を記述する
