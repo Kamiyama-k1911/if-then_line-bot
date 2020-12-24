@@ -1,3 +1,5 @@
+![ifthen-bot](https://user-images.githubusercontent.com/56924003/103079922-2a6edc80-4618-11eb-942f-3b4338fd8ed8.gif)
+
 ### if-then botとは
 
 if-then botは悪い習慣を断ち切る事を助けます。
